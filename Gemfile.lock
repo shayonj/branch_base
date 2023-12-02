@@ -30,7 +30,7 @@ GEM
       method_source (~> 1.0)
     racc (1.7.1)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.1.0)
     rbs (1.0.0)
     regexp_parser (2.8.2)
     rexml (3.2.6)
@@ -76,6 +76,7 @@ GEM
     ruby-progressbar (1.13.0)
     rugged (1.7.1)
     sqlite3 (1.6.9-arm64-darwin)
+    sqlite3 (1.6.9-x86_64-linux)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-haml (4.0.3)
@@ -93,6 +94,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   branch_base!
