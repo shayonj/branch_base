@@ -42,7 +42,7 @@ module BranchBase
         commit.author[:name],
         commit.committer[:name],
         commit.message,
-        commit.time.to_s,
+        commit.time.to_s
       )
     end
 
