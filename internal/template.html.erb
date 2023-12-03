@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Wrapped Statistics - <%= @repo_name.capitalize %> </title>
+    <style>
+      body {
+        font-family: "Fira Code", monospace;
+        background-color: #0C0A00;
+        color: #c1c1c1;
+        margin: 0;
+        padding: 0;
+        font-weight: 100;
+      }
+
+      header {
+        background-color: #0C0A00;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        border-bottom: 1px solid #333;
+      }
+
+      h1 {
+        font-size: 30px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        background-color: #0C0A00;
+        border-radius: 10px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+        gap: 20px;
+      }
+
+      .section {
+        padding: 20px;
+        border-bottom: 1px solid #333;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin: 0 0 20px;
+        color: #fff;
+      }
+
+      ul {
+        /* list-style: none; */
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.css"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Git Wrapped Statistics - <%= @repo_name.capitalize %></h1>
+    </header>
+    <div class="container">
+        <% @results.each do |key, values| %>
+            <div class="section">
+                <h2><%= @emojis[key] %> <%= key.gsub('_', ' ').split.map(&:capitalize).join(' ') %></h2>
+                <ul>
+                    <% values.each do |item| %>
+                        <li><%= item[0] %>: <%= item[1] %><%= item[2].nil? ? "" : "(#{item[2]})"%></li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+    </div>
+  </body>
+</html>

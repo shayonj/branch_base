@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "thor"
+require "erb"
 require "fileutils"
 
 module BranchBase
@@ -32,6 +33,38 @@ module BranchBase
       BranchBase.logger.info(
         "Repository data synced successfully in #{db_filename} in #{elapsed_time.round(2)} seconds",
       )
+    end
+
+    desc "git-wrapped REPO_PATH",
+         "Generate Git wrapped statistics for the given repository"
+    def git_wrapped(repo_path)
+      BranchBase.logger.info("Generating Git wrapped for #{repo_path}...")
+
+      full_repo_path = File.expand_path(repo_path)
+      @repo_name = File.basename(full_repo_path)
+      db_filename = File.join(full_repo_path, "#{@repo_name}_git_data.db")
+
+      unless File.exist?(db_filename)
+        BranchBase.logger.error("Database file not found: #{db_filename}")
+        exit(1)
+      end
+
+      database = Database.new(db_filename)
+      @results = BranchBase.execute_git_wrapped_queries(database)
+      @emojis = BranchBase.emojis_for_titles
+
+      json_full_path = "#{full_repo_path}/git-wrapped.json"
+      File.write(json_full_path, JSON.pretty_generate(@results))
+      BranchBase.logger.info("Git wrapped JSON stored in #{json_full_path}")
+
+      erb_template = File.read("./internal/template.html.erb")
+      erb = ERB.new(erb_template)
+      generated_html = erb.result(binding)
+
+      html_full_path = "#{full_repo_path}/git-wrapped.html"
+      File.write(html_full_path, generated_html)
+
+      BranchBase.logger.info("Git wrapped HTML stored in #{html_full_path}")
     end
   end
 end

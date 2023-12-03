@@ -49,6 +49,7 @@ module BranchBase
 
         branch_id = insert_branch(repo_id, branch.name)
 
+        # Only sync commits for the default branch
         if branch.name == default_branch_name
           insert_branch_commits(branch_id, branch)
         end
