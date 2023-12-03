@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+require_relative "lib/branch_base/version"
 
 Gem::Specification.new do |spec|
   spec.name = "branch_base"
-  spec.version = "0.1.0"
+  spec.version = BranchBase::VERSION
   spec.authors = ["Shayon Mukherjee"]
   spec.email = ["shayonj@gmail.com"]
 
@@ -16,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files =
     `git ls-files -z`.split("\x0")
       .reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir = "bin"
+  spec.bindir = "scripts"
   spec.executables = ["branch_base"]
   spec.require_paths = ["lib"]
 

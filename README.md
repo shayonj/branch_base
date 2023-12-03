@@ -11,21 +11,22 @@ You can now easily run, any kind of analytics on your Git directory using the SQ
 - Synchronize Git repository data into a SQLite database.
 - Query commit history, branch details, and file changes using SQL.
 - Easy-to-use CLI for quick setup and execution.
+- 📸 Check out the example below on how you can use `branch_base` to create a Spotify themed Git Wrapped using SQL
 
 ## Usage 🛠️
 
 After installation, you can use `branch_base` to generate a SQLite Database of a Git repository:
 
 ```bash
-branch_base sync ~/src/rails
+$ branch_base sync ~/src/rails
 ```
 
 ## Git wrapped 📸
 
-Easily generate a Git wrapped with some built-queries and style in
+Easily generate a Git wrapped with some built-queries and style using `branch_base`
 
 ```bash
-branch_base git-wrapped ~/src/rails
+$ branch_base git-wrapped ~/src/rails
 2023-12-03 11:40:50 -0500: INFO - BranchBase: Generating Git wrapped for /Users/shayon/src/rails...
 2023-12-03 11:40:53 -0500: INFO - BranchBase: Git wrapped JSON stored in /Users/shayon/src/rails/git-wrapped.json
 2023-12-03 11:40:53 -0500: INFO - BranchBase: Git wrapped HTML stored in /Users/shayon/src/rails/git-wrapped.html
@@ -95,7 +96,7 @@ Once your repository data is synchronized into a SQLite database, you can run va
 You can install `branch_base` directly using RubyGems:
 
 ```bash
-gem install branch_base
+$ gem install branch_base
 ```
 
 ### Via Docker 🐳
@@ -103,13 +104,13 @@ gem install branch_base
 `branch_base` is also available as a Docker image, which can be used to run the tool without setting up a Ruby environment:
 
 ```bash
-docker pull shayonj/branch_base:latest
+$ docker pull shayonj/branch_base:latest
 ```
 
 To use `branch_base` with Docker, you can mount your Git repository as a volume:
 
 ```bash
-docker run -v /repo/path:/repo shayonj/branch_base sync /repo
+$ docker run -v /repo/path:/repo shayonj/branch_base sync /repo
 ```
 
 This command will create a SQLite database with the repository's data in the path where the command is called from

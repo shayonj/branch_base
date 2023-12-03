@@ -66,5 +66,14 @@ module BranchBase
 
       BranchBase.logger.info("Git wrapped HTML stored in #{html_full_path}")
     end
+
+    desc "version", "Prints the version"
+    def version
+      puts BranchBase::VERSION
+    end
+
+    def self.exit_on_failure?
+      true
+    end
   end
 end

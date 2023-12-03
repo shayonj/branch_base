@@ -2,6 +2,7 @@
 
 require "logger"
 require "json"
+require "branch_base/version"
 require "branch_base/database"
 require "branch_base/repository"
 require "branch_base/sync"
