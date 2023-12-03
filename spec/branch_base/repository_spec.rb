@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-require "branch_base/repository"
-require "rugged"
-require "rspec"
+require "spec_helper"
 require "test_helper"
 
 RSpec.describe(BranchBase::Repository) do
@@ -24,7 +22,7 @@ RSpec.describe(BranchBase::Repository) do
       repository.walk { |commit| commit_messages << commit.message.strip }
       expect(commit_messages).to contain_exactly(
         "Add contributing guidelines",
-        "Initial commit"
+        "Initial commit",
       )
     end
   end

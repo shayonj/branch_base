@@ -2,6 +2,7 @@
 
 module BranchBase
   class Sync
+    # TODO acctualy see if bulk inserts are faster
     BATCH_SIZE = 1000
 
     def initialize(database, repository)
@@ -38,6 +39,10 @@ module BranchBase
     end
 
     def sync_branches(repo_id)
+      BranchBase.logger.debug(
+        "Syncing branches for repository ID: #{@repo.path}",
+      )
+
       batched_branches = []
 
       @repo.branches.each do |branch|
@@ -127,6 +132,10 @@ module BranchBase
     end
 
     def insert_commit_parents(commit)
+      BranchBase.logger.debug(
+        "Inserting parent commits for repository: #{@repo.path}",
+      )
+
       commit.parent_ids.each do |parent_id|
         @db.execute(
           "INSERT INTO commit_parents (commit_hash, parent_hash) VALUES (?, ?)",
@@ -147,6 +156,10 @@ module BranchBase
     end
 
     def insert_commits(batched_commits)
+      BranchBase.logger.debug(
+        "Inserting commits for repository ID: #{@repo.path}",
+      )
+
       @db.transaction do
         batched_commits.each do |data|
           @db.execute(

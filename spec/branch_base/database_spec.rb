@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-require "branch_base/database"
-require "rspec"
+require "spec_helper"
 
 RSpec.describe(BranchBase::Database) do
   let(:database) { BranchBase::Database.new(":memory:") }

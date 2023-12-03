@@ -1,9 +1,6 @@
 # frozen_string_literal: true
-require "branch_base/sync"
-require "branch_base/database"
-require "branch_base/repository"
 require "test_helper"
-require "rspec"
+require "spec_helper"
 
 RSpec.describe(BranchBase::Sync) do
   let(:db) { BranchBase::Database.new(":memory:") }

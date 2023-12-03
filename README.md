@@ -4,6 +4,8 @@
 
 You can now easily run, any kind of analytics on your Git directory using the SQLite database.
 
+![plot](./internal/screenshot.png)
+
 ## Features ✨
 
 - Synchronize Git repository data into a SQLite database.
@@ -17,6 +19,8 @@ After installation, you can use `branch_base` to sync a Git repository:
 ```bash
 branch_base sync ~/src/rails
 ```
+
+The first sync on large git directories might be a bit slow, subsequent runs should be faster.
 
 ## Example SQL Queries 📊
 
@@ -64,11 +68,13 @@ Once your repository data is synchronized into a SQLite database, you can run va
 6. **Authors Who Have Worked on a Specific File**
 
    ```sql
-    SELECT DISTINCT commits.author
-    FROM commits
-    JOIN commit_files ON commits.commit_hash = commit_files.commit_hash
-    JOIN files ON commit_files.file_id = files.file_id
-    WHERE files.file_path like '%sqlite3%'
+   SELECT files.file_path, commits.author, COUNT(*) as times_contributed
+   FROM commits
+   JOIN commit_files ON commits.commit_hash = commit_files.commit_hash
+   JOIN files ON commit_files.file_id = files.file_id
+   WHERE files.file_path LIKE '%connection_adapters/sqlite%'
+   GROUP BY files.file_path, commits.author
+   ORDER BY times_contributed DESC;
    ```
 
 ## Installation 📥
