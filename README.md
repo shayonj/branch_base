@@ -7,7 +7,7 @@
 
 You can now easily run, any kind of analytics on your Git directory using the SQLite database.
 
-![](./lib/internal/screenshot.png)
+![](./assets/screenshot.png)
 
 ## Features ✨
 
@@ -35,7 +35,7 @@ $ branch_base git-wrapped ~/src/rails
 2023-12-03 11:40:53 -0500: INFO - BranchBase: Git wrapped HTML stored in /Users/shayon/src/rails/git-wrapped.html
 ```
 
-![](./lib/internal/git-wrapped.png)
+![](./assets/git-wrapped.png)
 
 ## Example SQL Queries 📊
 
@@ -123,23 +123,25 @@ This command will create a SQLite database with the repository's data in the pat
 The SQLite database of the follow tables:
 
 ```
-repositories
+repositories ──────────────────────┬───────────────── files
+  │                                │
+  ├─ commits ────── commit_files ──┘
+  │   │
+  │   ├─ branch_commits ── branches
+  │   │
+  │   └─ commit_parents
   │
-  └─ commits ───── commit_files ── files
-      │                  │              │
-      ├─ branches ───────┘              │
-      │                                 │
-      └─ commit_parents ────────────────┘
+  └─ files (via latest_commit in commits)
 ```
 
-**Table Descriptions**:
+In this schema:
 
-- `repositories`: Contains details about the repositories.
-- `commits`: Stores individual commits. Each commit is linked to a repository.
-- `branches`: Branch information linked to their latest commits.
-- `files`: Information about files changed in commits. We don't store file contents.
-- `commit_files`: Associates commits with files, including changes.
-- `commit_parents`: Tracks parent-child relationships between commits.
+- `repositories` has direct relationships with `commits` and `files` via `repo_id`
+- `commits` is central, connecting to `commit_files`, `branch_commits`, and `commit_parents`, via `commit_hash`
+- `commit_files` provides a link between `commits` and `files`.
+- `branch_commits` joins `branches` with `commits`, via `branch_id` and `commit_hash`
+- `branches` are linked back to `repositories`.
+- `files` also connects back to `commits` through the `latest_commit`.
 
 ## Contributing 🤝
 

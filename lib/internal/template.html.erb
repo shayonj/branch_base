@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Git Wrapped Statistics - <%= @repo_name.capitalize %> </title>
+    <title>Git Wrapped Statistics - <%= @repo_name.capitalize %></title>
     <style>
       body {
         font-family: "Fira Code", monospace;
-        background-color: #0C0A00;
+        background-color: #0c0a00;
         color: #c1c1c1;
         margin: 0;
         padding: 0;
@@ -15,7 +15,7 @@
       }
 
       header {
-        background-color: #0C0A00;
+        background-color: #0c0a00;
         color: #fff;
         text-align: center;
         padding: 20px;
@@ -28,9 +28,9 @@
       }
 
       .container {
-        max-width: 1200px;
+        max-width: 1250px;
         margin: 20px auto;
-        background-color: #0C0A00;
+        background-color: #0c0a00;
         border-radius: 10px;
         overflow: hidden;
         display: grid;
@@ -50,13 +50,28 @@
       }
 
       ul {
-        /* list-style: none; */
         padding: 0;
+        margin-left: 10px;
       }
 
       li {
         margin-bottom: 10px;
         font-size: 18px;
+        color: #fff;
+        padding-left: 10px;
+        position: relative;
+        transition: all 0.3s ease;
+        text-wrap: wrap;
+      }
+
+      li:hover {
+        transform: translateX(5px);
+        color: #DF826C;
+      }
+
+      .highlight {
+        font-weight: bold;
+        color: #DF826C;
       }
     </style>
     <link
@@ -66,7 +81,7 @@
   </head>
   <body>
     <header>
-      <h1>Git Wrapped Statistics - <%= @repo_name.capitalize %></h1>
+      <h1>Git Wrapped - <%= @repo_name.capitalize %></h1>
     </header>
     <div class="container">
         <% @results.each do |key, values| %>
@@ -74,7 +89,7 @@
                 <h2><%= @emojis[key] %> <%= key.gsub('_', ' ').split.map(&:capitalize).join(' ') %></h2>
                 <ul>
                     <% values.each do |item| %>
-                        <li><%= item[0] %>: <%= item[1] %><%= item[2].nil? ? "" : "(#{item[2]})"%></li>
+                        <li><span class="highlight"><%= item[0] %></span>: <%= item[1] %><%= item[2].nil? ? "" : "(#{item[2]})"%></li>
                     <% end %>
                 </ul>
             </div>

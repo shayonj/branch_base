@@ -57,7 +57,7 @@ module BranchBase
       File.write(json_full_path, JSON.pretty_generate(@results))
       BranchBase.logger.info("Git wrapped JSON stored in #{json_full_path}")
 
-      erb_template = File.read("./internal/template.html.erb")
+      erb_template = File.read("./lib/internal/template.html.erb")
       erb = ERB.new(erb_template)
       generated_html = erb.result(binding)
 
