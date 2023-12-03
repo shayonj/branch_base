@@ -11,8 +11,6 @@ module BranchBase
     end
 
     def walk(branch_name = nil, &block)
-      # Use the provided branch's head commit OID if a branch name is given,
-      # otherwise, use the repository's HEAD commit OID.
       oid =
         if branch_name
           branch = @repo.branches[branch_name]
