@@ -16,6 +16,7 @@ RSpec.describe(BranchBase::Database) do
         commit_files
         commit_parents
         sqlite_sequence
+        branch_commits
       ]
       expect(tables.flatten).to match_array(expected_tables)
     end

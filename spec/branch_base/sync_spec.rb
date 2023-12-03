@@ -105,4 +105,50 @@ RSpec.describe(BranchBase::Sync) do
       end
     end
   end
+
+  describe "#sync_branch_commits" do
+    it "associates commits only with the default branch" do
+      sync.sync_branches(@repo_id)
+      sync.sync_commits(@repo_id)
+
+      default_branch_name = repo.default_branch_name
+      default_branch_id =
+        db
+          .execute(
+            "SELECT branch_id FROM branches WHERE repo_id = ? AND name = ?",
+            [@repo_id, default_branch_name],
+          )
+          .first
+          &.first
+
+      git_commits = []
+      repo.walk(default_branch_name) { |commit| git_commits << commit.oid }
+
+      db_commit_hashes =
+        db.execute(
+          "SELECT commit_hash FROM branch_commits WHERE branch_id = ?",
+          default_branch_id,
+        ).flatten
+
+      expect(git_commits.size).to eq(db_commit_hashes.size)
+      git_commits.each do |commit_oid|
+        expect(db_commit_hashes).to include(commit_oid)
+      end
+
+      other_branch_ids =
+        db.execute(
+          "SELECT branch_id FROM branches WHERE repo_id = ? AND name != ?",
+          [@repo_id, default_branch_name],
+        ).flatten
+
+      other_branch_ids.each do |branch_id|
+        other_branch_commit_hashes =
+          db.execute(
+            "SELECT commit_hash FROM branch_commits WHERE branch_id = ?",
+            branch_id,
+          ).flatten
+        expect(other_branch_commit_hashes).to be_empty
+      end
+    end
+  end
 end
