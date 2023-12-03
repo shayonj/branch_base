@@ -2,7 +2,7 @@
 
 module BranchBase
   class Sync
-    BATCH_SIZE = 10_000 # Adjust this based on performance testing
+    BATCH_SIZE = 1000
 
     def initialize(database, repository)
       @db = database
@@ -10,20 +10,14 @@ module BranchBase
     end
 
     def run
-      # Disable foreign key checks for performance
       @db.execute("PRAGMA foreign_keys = OFF")
 
-      # @db.transaction do
       repo_id = sync_repository
       sync_branches(repo_id)
       sync_commits(repo_id)
-      # end
 
-      # Re-enable foreign key checks
       @db.execute("PRAGMA foreign_keys = ON")
     end
-
-    private
 
     def sync_repository
       repo_path = @repo.path.chomp(".git/")
@@ -32,13 +26,13 @@ module BranchBase
       existing_repo_id =
         @db.execute(
           "SELECT repo_id FROM repositories WHERE url = ?",
-          [repo_path]
+          [repo_path],
         ).first
       return existing_repo_id[0] if existing_repo_id
 
       @db.execute(
         "INSERT INTO repositories (name, url) VALUES (?, ?)",
-        [repo_name, repo_path]
+        [repo_name, repo_path],
       )
       @db.last_insert_row_id
     end
@@ -81,7 +75,7 @@ module BranchBase
           commit.author[:name],
           commit.committer[:name],
           commit.message,
-          commit.time.to_s
+          commit.time.to_s,
         ]
 
         if batched_commits.size >= BATCH_SIZE
@@ -106,10 +100,12 @@ module BranchBase
       insert_files_and_commit_files(batched_files) unless batched_files.empty?
     end
 
+    private
+
     def commit_exists?(commit_hash)
       @db.execute(
         "SELECT COUNT(*) FROM commits WHERE commit_hash = ?",
-        [commit_hash]
+        [commit_hash],
       ).first[
         0
       ].positive?
@@ -120,12 +116,12 @@ module BranchBase
         file_path = patch.delta.new_file[:path]
         @db.execute(
           "INSERT OR IGNORE INTO files (repo_id, file_path, latest_commit) VALUES (?, ?, ?)",
-          [repo_id, file_path, commit.oid]
+          [repo_id, file_path, commit.oid],
         )
         file_id = @db.last_insert_row_id
         @db.execute(
           "INSERT INTO commit_files (commit_hash, file_id, changes) VALUES (?, ?, ?)",
-          [commit.oid, file_id, patch.to_s]
+          [commit.oid, file_id, patch.to_s],
         )
       end
     end
@@ -134,7 +130,7 @@ module BranchBase
       commit.parent_ids.each do |parent_id|
         @db.execute(
           "INSERT INTO commit_parents (commit_hash, parent_hash) VALUES (?, ?)",
-          [commit.oid, parent_id]
+          [commit.oid, parent_id],
         )
       end
     end
@@ -144,7 +140,7 @@ module BranchBase
         batched_branches.each do |data|
           @db.execute(
             "INSERT OR IGNORE INTO branches (repo_id, name, head_commit) VALUES (?, ?, ?)",
-            data
+            data,
           )
         end
       end
@@ -155,7 +151,7 @@ module BranchBase
         batched_commits.each do |data|
           @db.execute(
             "INSERT INTO commits (commit_hash, repo_id, author, committer, message, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
-            data
+            data,
           )
         end
       end
@@ -167,12 +163,12 @@ module BranchBase
           repo_id, file_path, commit_hash, changes = data
           @db.execute(
             "INSERT OR IGNORE INTO files (repo_id, file_path, latest_commit) VALUES (?, ?, ?)",
-            [repo_id, file_path, commit_hash]
+            [repo_id, file_path, commit_hash],
           )
           file_id = @db.last_insert_row_id
           @db.execute(
             "INSERT INTO commit_files (commit_hash, file_id, changes) VALUES (?, ?, ?)",
-            [commit_hash, file_id, changes]
+            [commit_hash, file_id, changes],
           )
         end
       end

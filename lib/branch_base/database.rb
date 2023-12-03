@@ -25,38 +25,6 @@ module BranchBase
       @db.last_insert_row_id
     end
 
-    def commit_exists?(commit_hash)
-      query = "SELECT COUNT(*) FROM commits WHERE commit_hash = ?"
-      execute(query, commit_hash).first[0].positive?
-    end
-
-    def insert_commit(repo_id, commit)
-      return if commit_exists?(commit.oid)
-
-      query =
-        "INSERT INTO commits (commit_hash, repo_id, author, committer, message, timestamp) VALUES (?, ?, ?, ?, ?, ?)"
-      execute(
-        query,
-        commit.oid,
-        repo_id,
-        commit.author[:name],
-        commit.committer[:name],
-        commit.message,
-        commit.time.to_s
-      )
-    end
-
-    def get_or_insert_repo_id(name, path)
-      query = "SELECT repo_id FROM repositories WHERE url = ?"
-      result = execute(query, path).first
-      return result[0] if result
-
-      execute("INSERT INTO repositories (name, url) VALUES (?, ?)", name, path)
-      last_insert_row_id
-    end
-
-    private
-
     def setup_schema
       @db.execute_batch(<<-SQL)
         CREATE TABLE IF NOT EXISTS repositories (

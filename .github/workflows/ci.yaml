@@ -29,6 +29,12 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
 
+      - name: Configure Git
+        run: |
+          git config --global user.email "shayonj@gmail.com"
+          git config --global user.name "Shayon Mukherjee"
+          git config --global init.defaultBranch main
+
       - name: Bundle install
         env:
           RAILS_ENV: test
@@ -38,10 +44,10 @@ jobs:
 
       - name: Run Lint
         run: bundle exec rubocop
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
+
       - name: Run RSpec
         run: bundle exec rspec
+
   build-push-image:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest

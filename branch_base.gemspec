@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata = { "rubygems_mfa_required" => "true" }
 
+  spec.add_development_dependency("git")
   spec.add_development_dependency("prettier_print")
   spec.add_development_dependency("pry")
   spec.add_development_dependency("rake")
