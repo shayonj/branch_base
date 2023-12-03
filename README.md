@@ -4,7 +4,7 @@
 
 You can now easily run, any kind of analytics on your Git directory using the SQLite database.
 
-![plot](./internal/screenshot.png)
+![](./internal/screenshot.png)
 
 ## Features ✨
 
@@ -14,13 +14,24 @@ You can now easily run, any kind of analytics on your Git directory using the SQ
 
 ## Usage 🛠️
 
-After installation, you can use `branch_base` to sync a Git repository:
+After installation, you can use `branch_base` to generate a SQLite Database of a Git repository:
 
 ```bash
 branch_base sync ~/src/rails
 ```
 
-The first sync on large git directories might be a bit slow, subsequent runs should be faster.
+## Git wrapped 📸
+
+Easily generate a Git wrapped with some built-queries and style in
+
+```bash
+branch_base git-wrapped ~/src/rails
+2023-12-03 11:40:50 -0500: INFO - BranchBase: Generating Git wrapped for /Users/shayon/src/rails...
+2023-12-03 11:40:53 -0500: INFO - BranchBase: Git wrapped JSON stored in /Users/shayon/src/rails/git-wrapped.json
+2023-12-03 11:40:53 -0500: INFO - BranchBase: Git wrapped HTML stored in /Users/shayon/src/rails/git-wrapped.html
+```
+
+![](./internal/git-wrapped.png)
 
 ## Example SQL Queries 📊
 
