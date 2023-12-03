@@ -7,7 +7,7 @@
 
 You can now easily run, any kind of analytics on your Git directory using the SQLite database.
 
-![](./internal/screenshot.png)
+![](./lib/internal/screenshot.png)
 
 ## Features ✨
 
@@ -35,7 +35,7 @@ $ branch_base git-wrapped ~/src/rails
 2023-12-03 11:40:53 -0500: INFO - BranchBase: Git wrapped HTML stored in /Users/shayon/src/rails/git-wrapped.html
 ```
 
-![](./internal/git-wrapped.png)
+![](./lib/internal/git-wrapped.png)
 
 ## Example SQL Queries 📊
 
