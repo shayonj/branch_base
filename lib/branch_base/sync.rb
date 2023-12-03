@@ -39,32 +39,52 @@ module BranchBase
     end
 
     def sync_branches(repo_id)
-      BranchBase.logger.debug(
-        "Syncing branches for repository ID: #{@repo.path}",
-      )
+      BranchBase.logger.debug("Syncing branches for repository ID: #{repo_id}")
 
-      batched_branches = []
+      default_branch_name = @repo.default_branch_name
+      return unless default_branch_name
 
       @repo.branches.each do |branch|
         next if branch.name.nil? || branch.target.nil?
 
-        commit_oid =
-          (
-            if branch.target.respond_to?(:oid)
-              branch.target.oid
-            else
-              branch.target.target.oid
-            end
-          )
-        batched_branches << [repo_id, branch.name, commit_oid]
+        branch_id = insert_branch(repo_id, branch.name)
 
-        if batched_branches.size >= BATCH_SIZE
-          insert_branches(batched_branches)
-          batched_branches.clear
+        if branch.name == default_branch_name
+          insert_branch_commits(branch_id, branch)
         end
       end
+    end
 
-      insert_branches(batched_branches) unless batched_branches.empty?
+    def insert_branch(repo_id, branch_name)
+      existing_branch_id =
+        @db.execute(
+          "SELECT branch_id FROM branches WHERE name = ? AND repo_id = ?",
+          [branch_name, repo_id],
+        ).first
+      return existing_branch_id[0] if existing_branch_id
+
+      @db.execute(
+        "INSERT INTO branches (repo_id, name) VALUES (?, ?)",
+        [repo_id, branch_name],
+      )
+      @db.last_insert_row_id
+    end
+
+    def insert_branch_commits(branch_id, branch)
+      BranchBase.logger.debug("Syncing branch commits for: #{branch.name}")
+
+      head_commit = branch.target
+      walker = Rugged::Walker.new(@repo.repo)
+      walker.push(head_commit)
+
+      walker.each do |commit|
+        next if commit_exists?(commit.oid)
+
+        @db.execute(
+          "INSERT OR IGNORE INTO branch_commits (branch_id, commit_hash) VALUES (?, ?)",
+          [branch_id, commit.oid],
+        )
+      end
     end
 
     def sync_commits(repo_id)

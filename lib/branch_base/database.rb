@@ -43,21 +43,20 @@ module BranchBase
           FOREIGN KEY (repo_id) REFERENCES repositories (repo_id)
         );
 
-        CREATE INDEX IF NOT EXISTS idx_commits_repo_id ON commits (repo_id);
-        CREATE INDEX IF NOT EXISTS idx_commits_author ON commits (author);
-        CREATE INDEX IF NOT EXISTS idx_commits_committer ON commits (committer);
-
         CREATE TABLE IF NOT EXISTS branches (
           branch_id INTEGER PRIMARY KEY AUTOINCREMENT,
           repo_id INTEGER NOT NULL,
           name TEXT NOT NULL,
-          head_commit TEXT NOT NULL,
-          FOREIGN KEY (repo_id) REFERENCES repositories (repo_id),
-          FOREIGN KEY (head_commit) REFERENCES commits (commit_hash)
+          FOREIGN KEY (repo_id) REFERENCES repositories (repo_id)
         );
 
-        CREATE INDEX IF NOT EXISTS idx_branches_repo_id ON branches (repo_id);
-        CREATE INDEX IF NOT EXISTS idx_branches_head_commit ON branches (head_commit);
+        CREATE TABLE IF NOT EXISTS branch_commits (
+          branch_id INTEGER NOT NULL,
+          commit_hash TEXT NOT NULL,
+          PRIMARY KEY (branch_id, commit_hash),
+          FOREIGN KEY (branch_id) REFERENCES branches (branch_id),
+          FOREIGN KEY (commit_hash) REFERENCES commits (commit_hash)
+        );
 
         CREATE TABLE IF NOT EXISTS files (
           file_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,9 +66,6 @@ module BranchBase
           FOREIGN KEY (repo_id) REFERENCES repositories (repo_id),
           FOREIGN KEY (latest_commit) REFERENCES commits (commit_hash)
         );
-
-        CREATE INDEX IF NOT EXISTS idx_files_repo_id ON files (repo_id);
-        CREATE INDEX IF NOT EXISTS idx_files_file_path ON files (file_path);
 
         CREATE TABLE IF NOT EXISTS commit_files (
           commit_hash TEXT NOT NULL,
@@ -88,6 +84,12 @@ module BranchBase
           FOREIGN KEY (parent_hash) REFERENCES commits (commit_hash)
         );
 
+        CREATE INDEX IF NOT EXISTS idx_commits_repo_id ON commits (repo_id);
+        CREATE INDEX IF NOT EXISTS idx_commits_author ON commits (author);
+        CREATE INDEX IF NOT EXISTS idx_commits_committer ON commits (committer);
+        CREATE INDEX IF NOT EXISTS idx_branches_repo_id ON branches (repo_id);
+        CREATE INDEX IF NOT EXISTS idx_files_repo_id ON files (repo_id);
+        CREATE INDEX IF NOT EXISTS idx_files_file_path ON files (file_path);
         CREATE INDEX IF NOT EXISTS idx_commit_parents_commit_hash ON commit_parents (commit_hash);
         CREATE INDEX IF NOT EXISTS idx_commit_parents_parent_hash ON commit_parents (parent_hash);
       SQL
