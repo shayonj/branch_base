@@ -57,8 +57,10 @@ module BranchBase
       File.write(json_full_path, JSON.pretty_generate(@results))
       BranchBase.logger.info("Git wrapped JSON stored in #{json_full_path}")
 
-      erb_template = File.read("./lib/internal/template.html.erb")
-      erb = ERB.new(erb_template)
+      gem_root = Gem::Specification.find_by_name("branch_base").gem_dir
+      template_file_path =
+        File.join(gem_root, "lib", "internal", "template.html.erb")
+      erb = ERB.new(File.read(template_file_path))
       generated_html = erb.result(binding)
 
       html_full_path = "#{full_repo_path}/git-wrapped.html"
