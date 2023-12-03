@@ -1,52 +1,24 @@
 # BranchBase
 
-## Introduction
-
 `branch_base` is a Ruby gem to synchronize data from a Git repository into a SQLite database. It provides a CLI to easily build and store the data, including commits, branches, and file changes, into a SQLite database.
 
 You can now easily run, any kind of analytics on your Git directory using the SQLite database.
 
-## Features
+## Features ✨
 
 - Synchronize Git repository data into a SQLite database.
 - Query commit history, branch details, and file changes using SQL.
 - Easy-to-use CLI for quick setup and execution.
 
-## Installation
-
-### Via RubyGems
-
-You can install `branch_base` directly using RubyGems:
-
-```bash
-gem install branch_base
-```
-
-### Via Docker
-
-`branch_base` is also available as a Docker image, which can be used to run the tool without setting up a Ruby environment:
-
-```bash
-docker pull shayonj/branch_base:latest
-```
-
-To use `branch_base` with Docker, you can mount your Git repository as a volume:
-
-```bash
-docker run -v /repo/path:/repo shayonj/branch_base sync /repo
-```
-
-## Usage
+## Usage 🛠️
 
 After installation, you can use `branch_base` to sync a Git repository:
 
 ```bash
-branch_base sync /repo/path
+branch_base sync ~/src/rails
 ```
 
-This command will create a SQLite database with the repository's data in the path where the command is called from
-
-## Example SQL Queries
+## Example SQL Queries 📊
 
 Once your repository data is synchronized into a SQLite database, you can run various SQL queries to analyze the data. Here are some examples:
 
@@ -99,7 +71,33 @@ Once your repository data is synchronized into a SQLite database, you can run va
     WHERE files.file_path like '%sqlite3%'
    ```
 
-## Database Schema
+## Installation 📥
+
+### Via RubyGems 💎
+
+You can install `branch_base` directly using RubyGems:
+
+```bash
+gem install branch_base
+```
+
+### Via Docker 🐳
+
+`branch_base` is also available as a Docker image, which can be used to run the tool without setting up a Ruby environment:
+
+```bash
+docker pull shayonj/branch_base:latest
+```
+
+To use `branch_base` with Docker, you can mount your Git repository as a volume:
+
+```bash
+docker run -v /repo/path:/repo shayonj/branch_base sync /repo
+```
+
+This command will create a SQLite database with the repository's data in the path where the command is called from
+
+## Database Schema 🗺️
 
 The SQLite database of the follow tables:
 
@@ -122,15 +120,15 @@ repositories
 - `commit_files`: Associates commits with files, including changes.
 - `commit_parents`: Tracks parent-child relationships between commits.
 
-## Contributing
+## Contributing 🤝
 
 Contributions to `branch_base` are welcome!
 
-## License
+## License 📜
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Development
+## Development 💻
 
 - Install ruby `3.1.4` using RVM ([instruction](https://rvm.io/rvm/install#any-other-system))
 - `bundle exec rspec` for specs
