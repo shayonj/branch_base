@@ -1,5 +1,8 @@
 # BranchBase
 
+[![CI](https://github.com/shayonj/branch_base/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/shayonj/branch_base/actions/workflows/ci.yaml)
+[![Gem Version](https://badge.fury.io/rb/branch_base.svg?2)](https://badge.fury.io/rb/branch_base)
+
 `branch_base` is a Ruby gem to synchronize data from a Git repository into a SQLite database. It provides a CLI to easily build and store the data, including commits, branches, and file changes, into a SQLite database.
 
 You can now easily run, any kind of analytics on your Git directory using the SQLite database.
